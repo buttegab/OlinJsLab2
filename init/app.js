@@ -3,8 +3,10 @@
  * Module dependencies.
  */
 
-var express = require('express')
-  , routes = require('./routes');
+var express = require('express'),
+    routes = require('./routes'),
+    mongoose = require('mongoose'),
+    index = require('./routes/index');
 
 var app = module.exports = express.createServer();
 
@@ -28,8 +30,9 @@ app.configure('production', function(){
 });
 
 // Routes
+// Home Page
+app.get('/', index.home);
 
-app.get('/', routes.index);
 
 app.listen(3000, function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
