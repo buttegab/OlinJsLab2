@@ -14,5 +14,20 @@ function mainController($scope, $http) {
         .error(function(data) {
             console.log('Error: ' + data);
         });
+    //adds a location
+    $scope.createLocation = function() {
+        $http.post("/addLocation", {name: $scope.name, address: $scope.address, coordinates: $scope.coordinates, bookshelf: $scope.bookshelf, description: $scope.description})
+            .success(function(data) {
+                $scope.name = null; // clear the form
+                $scope.address = null;
+                $scope.coordinates = null;
+                $scope.bookshelf = null;
+                $scope.description = null;
 
+                $scope.skwikis = data;
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+    };
 }
