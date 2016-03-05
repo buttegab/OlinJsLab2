@@ -1,39 +1,26 @@
-
-/**
- * Module dependencies.
- */
-
 var express = require('express'),
-    routes = require('./routes'),
+    bodyParser = require('body-parser'),
     mongoose = require('mongoose'),
     index = require('./routes/index');
 
-var app = module.exports = express.createServer();
+var app = express();
 
 // Configuration
-
-app.configure(function(){
-  app.set('views', __dirname + '/views');
-  app.set('view engine', 'jade');
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(app.router);
-  app.use(express.static(__dirname + '/public'));
-});
-
-app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-});
-
-app.configure('production', function(){
-  app.use(express.errorHandler());
-});
+app.set('views', __dirname + '/views');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));;
+app.use(express.static(__dirname + '/public'));
 
 // Routes
 // Home Page
 app.get('/', index.home);
 
+//Gets
+app.get('/location', index.location) //By ID?
 
-app.listen(3000, function(){
-  console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
-});
+//Posts
+app.post('/addLocation', index.addLocation);
+app.post('/editLocation', index.editLocation)
+app.post('/deleteLobation', index.deleteLocation);
+
+app.listen(3000);

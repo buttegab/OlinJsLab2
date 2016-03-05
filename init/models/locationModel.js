@@ -12,8 +12,8 @@ var locationSchema = mongoose.Schema({
     name: String,
     address: Object, //Geocoding API accepts "5-box input", a json object
     coordinates: Array, //Two different floats
-    bookshelf: Array,
+    bookshelf: Array, //Array of books to list
     description: String
 });
 
-module.exports  = mongoose.model('location', topicSchema);
+module.exports  = mongoose.model('location', locationSchema);

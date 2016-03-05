@@ -1,8 +1,60 @@
+//Serving all the routes that we have.
+var Location = require("../models/locationModel")
 
-/*
- * GET home page.
- */
-
-exports.index = function(req, res){
-  res.render('index', { title: 'Express' })
+routes = {}
+routes.home = function(req, res){
+  res.sendfile('../public/html')
 };
+
+routes.location = function(req, res){
+  id = req.query.id;
+  Location.findOne({_id:id}, function(err, location){
+  	if (err){
+  	  res.status(500).send("Error retrieving location by ID")
+  	}
+  	else {
+  	  res.send(location)
+  	}
+  })
+}
+
+routes.addLocation = function(req, res){
+  if (!req.body){
+  	res.status(400).send("No location provided");
+  }
+  else{
+  	location = new Location(req.body)
+  	location.save(function(err){
+  	  if(err){
+  	  	res.status(500).send("Location not saved correctly");}
+  	  else{
+  	  	res.send()
+  	  }
+  	})
+  }
+}
+
+routes.editLocation = function(req, res){
+  Location.update({_id:req.body.id}, req.body, function(err){
+  	if(err){
+  	  res.status(500).send("Error updating location.")
+  	}
+  	else{
+  	  res.send()
+  	}
+  })
+}
+
+routes.deleteLocation = function(req, res){
+  Location.remove({_id:req.body.id}, function(err){
+  	if(err){
+  	  res.status(500).send("Error deleting location.")
+  	}
+  	else{
+  	  res.send()
+  	}
+  })
+}
+
+
+module.exports = routes;
