@@ -19,8 +19,8 @@
 
   <!-- CSS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="stylesheet" type = "text/css" href="Skeleton/css/normalize.css">
-  <link rel="stylesheet" type = "text/css" href="Skeleton/css/skeleton.css">
+  <link rel="stylesheet" type = "text/css" href="css/normalize.css">
+  <link rel="stylesheet" type = "text/css" href="css/skeleton.css">
 
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -33,24 +33,52 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
   <script src="javascripts/root.js"></script>
 
+  <script src="http://www.mapquestapi.com/sdk/js/v7.2.s/mqa.toolkit.js?key=Key_Here"></script>
+ 
+  <script type="text/javascript">
+ 
+  // An example of using the MQA.EventUtil to hook into the window load event and execute the defined
+  // function passed in as the last parameter. You could alternatively create a plain function here and
+  // have it executed whenever you like (e.g. <body onload="yourfunction">).
+ 
+  MQA.EventUtil.observe(window, 'load', function() {
+ 
+    // create an object for options
+    var options = {
+      elt: document.getElementById('map'),       // ID of map element on page
+      zoom: 10,                                  // initial zoom level of the map
+      latLng: { lat: 39.7439, lng: -105.0200 },  // center of map in latitude/longitude
+      mtype: 'map',                              // map type (map, sat, hyb); defaults to map
+      bestFitMargin: 0,                          // margin offset from map viewport when applying a bestfit on shapes
+      zoomOnDoubleClick: true                    // enable map to be zoomed in when double-clicking
+    };
+ 
+    // construct an instance of MQA.TileMap with the options object
+    window.map = new MQA.TileMap(options);
+  });
+ 
+</script>
 </head>
 <body ng-controller = "mainController">
+
 
   <!-- Primary Page Layout
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <div class="container">
     <div class="row">
-      <div class="one-third column" style="margin-top: 10%; border-right: 1px solid #E1E1E1;">
+
+      
        
         <h4>Welcome to Book Quest</h4>
         <p>Your one stop shop for all books and book related locations. Actually just locations. We don't have books. It's a sensitive topic</p>
         <input type="text" placeholder = "Search for a location" ng-model="searchText">
-      </div>
+        <div id="map" style="width:500px; height:300px;"></div>
+      
     </div>
         <h5> Contribute A Book Location </h5>
         <div class = "addNewLocationEntry">
           Location Name:<br> <input type="text" ng-model = "name" placeholder="What's it called?"> <br>
-          Location Address OR  Location Coordinates: <br> <input type="text" ng-model = "address" placeholder = "Where is it?">  OR        <input type="text" ng-model = "coordinates" placeholder="Coordinates?"> <br>
+          Location Address OR  Location Coordinates: <br> <input type="text" ng-model = "address" placeholder = "Where is it?"> <br> OR  <br>      <input type="text" ng-model = "coordinates" placeholder="Coordinates?"> <br>
           Location Description:<br> <input type="text" ng-model = "description" placeholder="Tell us about this place"> <br>
           Location Bookshelf:<br> <input type="text" ng-model = "bookshelf" placeholder = "What to read while you're there"><br>
           
