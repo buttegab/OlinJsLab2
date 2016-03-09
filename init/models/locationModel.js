@@ -10,9 +10,9 @@ var mongoose = require('mongoose');
 // Create a wiki page schema
 var locationSchema = mongoose.Schema({
     name: String,
-    address: Object, //Geocoding API accepts "5-box input", a json object
-    coordinates: Array, //Two different floats
-    bookshelf: Array, //Array of books to list
+    address: String, //Geocoding API accepts "5-box input", a json object
+    coordinates: String, //Two different floats
+    bookshelf: String, //Array of books to list
     description: String
 });
 

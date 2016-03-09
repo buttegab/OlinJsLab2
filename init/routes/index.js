@@ -3,9 +3,17 @@ var Location = require("../models/locationModel")
 
 routes = {}
 routes.home = function(req, res){
-  res.sendfile('../public/html')
+  res.sendfile('/public/index.html', {root:'./'})
 };
 
+routes.login = function(req, res){
+  console.log("Logging in.")
+  res.sendFile('/public/login.html', {root:'./'})
+}
+
+
+///////////////////////////////////////////
+////////// Location API routes ////////////
 routes.location = function(req, res){
   id = req.query.id;
   Location.findOne({_id:id}, function(err, location){
@@ -21,6 +29,11 @@ routes.location = function(req, res){
 routes.addLocation = function(req, res){
   if (!req.body){
   	res.status(400).send("No location provided");
+  }
+  if (res.body.address && res.body.coordinates){
+  	//We aren't supposed to have them cataloged by address or
+  	//coordinates
+  	res.body.coordinates = null; //TODO: Impliment coordinates by address
   }
   else{
   	location = new Location(req.body)
