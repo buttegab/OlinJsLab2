@@ -30,12 +30,12 @@ routes.addLocation = function(req, res){
   if (!req.body){
   	res.status(400).send("No location provided");
   }
-  if (res.body.address && res.body.coordinates){
+  if (req.body.address && req.body.coordinates){
   	//We aren't supposed to have them cataloged by address or
   	//coordinates
-  	res.body.coordinates = null; //TODO: Impliment coordinates by address
+  	req.body.coordinates = null; //TODO: Impliment coordinates by address
   }
-  else{
+  
   	location = new Location(req.body)
   	location.save(function(err){
   	  if(err){
@@ -44,7 +44,7 @@ routes.addLocation = function(req, res){
   	  	res.send()
   	  }
   	})
-  }
+  
 }
 
 routes.editLocation = function(req, res){
