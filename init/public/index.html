@@ -33,40 +33,8 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
   <script src="javascripts/root.js"></script>
 
-  <script src="http://www.mapquestapi.com/sdk/js/v7.2.s/mqa.toolkit.js?key=NvDRpTMCgNmSGfJa0AdZVsxaoUoxgYhZ"></script>
+  <script src="http://www.mapquestapi.com/sdk/js/v7.2.s/mqa.toolkit.js?key="></script>
  
-  <script type="text/javascript">
- 
-  // An example of using the MQA.EventUtil to hook into the window load event and execute the defined
-  // function passed in as the last parameter. You could alternatively create a plain function here and
-  // have it executed whenever you like (e.g. <body onload="yourfunction">).
-  mapthing = {}
-  MQA.EventUtil.observe(window, 'load', function() {
- 
-    // create an object for options
-    var options = {
-      elt: document.getElementById('map'),       // ID of map element on page
-      zoom: 10,                                  // initial zoom level of the map
-      latLng: { lat: 39.7439, lng: -105.0200 },  // center of map in latitude/longitude
-      mtype: 'map',                              // map type (map, sat, hyb); defaults to map
-      bestFitMargin: 0,                          // margin offset from map viewport when applying a bestfit on shapes
-      zoomOnDoubleClick: true                    // enable map to be zoomed in when double-clicking
-    };
- 
-    // construct an instance of MQA.TileMap with the options object
-    mapthing = new MQA.TileMap(options);
-    dothing()
-  });
-
-  // download the modules
-  function dothing() { 
-    MQA.withModule('largezoom', function() {
-    // add the Large Zoom control
-    mapthing.addControl(new MQA.LargeZoom());
-    window.map = mapthing;
-  });}
- 
-</script>
 </head>
 <body ng-controller = "mainController">
 
@@ -80,9 +48,14 @@
        
         <h4>Welcome to Book Quest</h4>
         <p>Your one stop shop for all books and book related locations. Actually just locations. We don't have books. It's a sensitive topic</p>
+        <form>
         <input type="text" placeholder = "Search for a location" ng-model="searchText">
+        <button type = "submit" class = "search" ng-click = "searchLocation(searchText)">Search</button>
         <div id="map" style="width:500px; height:300px;"></div>
-      
+
+
+
+        </form>
     </div>
         <h5> Contribute A Book Location </h5>
         <div class = "addNewLocationEntry">
