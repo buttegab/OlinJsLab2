@@ -1,5 +1,6 @@
 //Serving all the routes that we have.
 var Location = require("../models/locationModel")
+User = require('./models/userModel')
 
 routes = {}
 routes.home = function(req, res){
@@ -41,6 +42,7 @@ routes.addLocation = function(req, res){
   	  if(err){
   	  	res.status(500).send("Location not saved correctly");}
   	  else{
+
   	  	res.send()
   	  }
   	})

@@ -36,9 +36,9 @@ app.get('/location', index.location) //By ID?
 app.get('/login', index.login)
 
 //Posts
-app.post('/addLocation', index.addLocation);
-app.post('/editLocation', index.editLocation)
-app.post('/deleteLocation', index.deleteLocation);
+app.post('/addLocation', function(req,res){ensureAuthenticated(req,res,index.addLocation)});
+app.post('/editLocation', function(req,res){ensureAuthenticated(req,res,index.editLocation)})
+app.post('/deleteLocation', function(req,res){ensureAuthenticated(req,res,index.deleteLocation)});
 
 //Goodreads login code
 app.get('/auth/goodreads', passport.authenticate('goodreads'), function(req,res){console.log("Login in.")});
@@ -82,5 +82,10 @@ passport.use(new GoodreadsStrategy({
     });
   }
 ));
+
+var ensureAuthenticated = function(req, res, next) {
+  if (req.isAuthenticated()) { return next(req, res); }
+  res.status(401);
+}
 
 app.listen(3000);

@@ -9,7 +9,8 @@ var mongoose = require('mongoose');
 
 // Create a wiki page schema
 var userSchema = mongoose.Schema({
-    goodreadsID: String
+    goodreadsID: String,
+    locations: Array
 });
 
 module.exports  = mongoose.model('user', userSchema);
