@@ -32,8 +32,10 @@ app.use(session({
 app.get('/', index.home);
 
 //Gets
-app.get('/location', index.location) //By ID?
+app.get('/location', index.location) //By ID
+app.get('/searchLocation', index.locationbyname)
 app.get('/login', index.login)
+app.get('/searchBook', index.searchBook)
 
 //Posts
 app.post('/addLocation', index.addLocation);

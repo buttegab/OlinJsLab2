@@ -1,6 +1,9 @@
 //Serving all the routes that we have.
-var Location = require("../models/locationModel")
-User = require('./models/userModel')
+var Location = require("../models/locationModel"),
+User = require('../models/userModel'),
+auth = require('../auth'),
+http = require('http'),
+request = require('request');
 
 routes = {}
 routes.home = function(req, res){
@@ -24,6 +27,56 @@ routes.location = function(req, res){
   	else {
   	  res.send(location)
   	}
+  })
+}
+
+// routes.searchBook = function(req, res){
+//   text = req.searchText;
+//   var bodyChunks = [];
+//   var data = "/search/index.xml?key=IiXhpeA7SZ5r0z4ndE2BEg&q=Redshirts"
+//   http.get({host:"https://www.goodreads.com/search/index.xml?key=IiXhpeA7SZ5r0z4ndE2BEg&q=Redshirts"})
+//     .on('data', function(chunk) {
+//       // You can process streamed parts here...
+//       bodyChunks.push(chunk);
+//     })
+//     .on('end', function(){
+//       console.log(Buffer.concat(bodyChunks).results[0])
+//       res.send(Buffer.concat(bodyChunks))
+//     })
+//     .on('error', function (err){
+//       console.log(err)
+//       res.status(500).send("Error looking up book.")
+//     })
+// }
+
+routes.searchBook = function(req, res){
+  text = req.searchText;
+  var bodyChunks = [];
+  var url = "https://www.goodreads.com/search/index.xml?key=IiXhpeA7SZ5r0z4ndE2BEg&q=Redshirts"
+  request(url, function(err, response, body){
+    if (!err && response.statusCode == 200) {
+      console.log(body) // Show the HTML for the Google homepage. 
+      res.send(body)
+    }
+    else{
+      console.log(err)
+      res.send("Couldn't get it.")
+    }
+  })
+}
+
+
+routes.locationbyname = function(req, res){
+  console.log("Getting location by name")
+  name = req.query.name;
+  Location.findOne({name:name}, function(err, location){
+    if (err){
+      res.status(500).send("Error retrieving location by name")
+    }
+    else {
+      console.log(location)
+      res.send(location)
+    }
   })
 }
 

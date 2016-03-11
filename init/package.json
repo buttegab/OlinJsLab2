@@ -14,6 +14,7 @@
     "express": "^4.13.4",
     "express-handlebars": "^3.0.0",
     "express-session": "^1.13.0",
+    "jquery": "^2.2.1",
     "kerberos": "0.0.18",
     "method-override": "^2.3.5",
     "mongoose": "^4.4.2",
@@ -23,6 +24,7 @@
     "passport-goodreads": "^1.0.0",
     "passport-google": "^0.3.0",
     "passport-google-oauth": "^1.0.0",
+    "request": "^2.69.0",
     "serve-favicon": "~2.3.0"
   }
 }
