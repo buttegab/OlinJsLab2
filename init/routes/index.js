@@ -3,7 +3,9 @@ var Location = require("../models/locationModel"),
 User = require('../models/userModel'),
 auth = require('../auth'),
 http = require('http'),
+parseString = require('xml2js').parseString,
 request = require('request');
+
 
 routes = {}
 routes.home = function(req, res){
@@ -30,37 +32,30 @@ routes.location = function(req, res){
   })
 }
 
-// routes.searchBook = function(req, res){
-//   text = req.searchText;
-//   var bodyChunks = [];
-//   var data = "/search/index.xml?key=IiXhpeA7SZ5r0z4ndE2BEg&q=Redshirts"
-//   http.get({host:"https://www.goodreads.com/search/index.xml?key=IiXhpeA7SZ5r0z4ndE2BEg&q=Redshirts"})
-//     .on('data', function(chunk) {
-//       // You can process streamed parts here...
-//       bodyChunks.push(chunk);
-//     })
-//     .on('end', function(){
-//       console.log(Buffer.concat(bodyChunks).results[0])
-//       res.send(Buffer.concat(bodyChunks))
-//     })
-//     .on('error', function (err){
-//       console.log(err)
-//       res.status(500).send("Error looking up book.")
-//     })
-// }
-
 routes.searchBook = function(req, res){
-  text = req.searchText;
-  var bodyChunks = [];
-  var url = "https://www.goodreads.com/search/index.xml?key=IiXhpeA7SZ5r0z4ndE2BEg&q=Redshirts"
+  text = req.query.searchText;
+  console.log(text)
+  key = auth.goodreads.APP_ID
+  var url = "https://www.goodreads.com/search/index.xml?key="+key+"&q=\""+text+"\""
   request(url, function(err, response, body){
     if (!err && response.statusCode == 200) {
-      console.log(body) // Show the HTML for the Google homepage. 
-      res.send(body)
+      parseString(body, function(err, result){
+        if (err){
+          res.status(500).send("Couldn't retrieve book from Goodreads.")
+        }
+        else{
+          book = result.GoodreadsResponse.search[0].results[0].work[0].best_book[0]
+          console.log(book)
+          name = book.title[0]
+          author = book.author[0].name[0]
+          image = book.image_url[0]
+          res.send({name:name, author:author, image:image})
+        }
+      })
     }
     else{
       console.log(err)
-      res.send("Couldn't get it.")
+      res.status(500).send("Couldn't find a book.")
     }
   })
 }

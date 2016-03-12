@@ -32,7 +32,7 @@
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script><!-- load angular -->
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular-route.js"></script>
   <script src="http://www.mapquestapi.com/sdk/js/v7.2.s/mqa.toolkit.js?key=NvDRpTMCgNmSGfJa0AdZVsxaoUoxgYhZ"></script>
-  <script src="javascripts/thingie.js"></script>
+  <script src="javascripts/root.js"></script>
 
   
  
@@ -58,18 +58,27 @@
 
         </form>
     </div>
-        <h5> Contribute A Book Location </h5>
-        <div class = "addNewLocationEntry">
+        <div class = "addNewLocationEntry" ng-show="showForm()">
+          <h5> Contribute A Book Location </h5><br>
           Location Name:<br> <input type="text" ng-model = "name" placeholder="What's it called?"> <br>
-          Location Address OR  Location Coordinates: <br> <input type="text" ng-model = "address" placeholder = "Where is it?"> <br> OR  <br>      <input type="text" ng-model = "coordinates" placeholder="Coordinates?"> <br>
+          Location Coordinates: <br> <input type="text" ng-model = "coordinates" placeholder="Coordinates?"> <br>
           Location Description:<br> <input type="text" ng-model = "description" placeholder="Tell us about this place"> <br>
           Location Bookshelf:<br> <input type="text" ng-model = "bookshelf" placeholder = "What to read while you're there"><br>
-          
-
-
           <button type = "submit" class = "add" ng-click = "createLocation()">Add to Locations</button>
         </div>
+
+        <div class = "displayBook" ng-show="showBook()">
+        <h5>You should be reading...</h5>
+        {{readingBook}}<br>
+        by {{author}}<br>
+        <img ng-src={{img_url}}></img>
+        </div>
+        
+  <a href="/login">Login Here</a>
   </div>
+
+  
+
 <!-- End Document
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 </body>

@@ -38,13 +38,13 @@ app.get('/login', index.login)
 app.get('/searchBook', index.searchBook)
 
 //Posts
-app.post('/addLocation', index.addLocation);
-app.post('/editLocation', index.editLocation)
-app.post('/deleteLocation', index.deleteLocation);
+// app.post('/addLocation', index.addLocation);
+// app.post('/editLocation', index.editLocation)
+// app.post('/deleteLocation', index.deleteLocation);
 
-// app.post('/addLocation', function(req,res){ensureAuthenticated(req,res,index.addLocation)});
-// app.post('/editLocation', function(req,res){ensureAuthenticated(req,res,index.editLocation)})
-// app.post('/deleteLocation', function(req,res){ensureAuthenticated(req,res,index.deleteLocation)});
+app.post('/addLocation', function(req,res){ensureAuthenticated(req,res,index.addLocation)});
+app.post('/editLocation', function(req,res){ensureAuthenticated(req,res,index.editLocation)});
+app.post('/deleteLocation', function(req,res){ensureAuthenticated(req,res,index.deleteLocation)});
 
 //Goodreads login code
 app.get('/auth/goodreads', passport.authenticate('goodreads'), function(req,res){console.log("Login in.")});

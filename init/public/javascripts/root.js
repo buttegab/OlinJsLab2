@@ -4,6 +4,8 @@ var app = angular.module("bookQuestApp", ['ngRoute']);
 function mainController($scope, $http) {
     $scope.formData = {};
     $scope.currentSkwiki = null;
+    console.log("Setting show Location to false")
+    $scope.showingLocation = false;
 
     // when landing on the page, get all skwiki titles and show them
     $http.get("/")
@@ -18,15 +20,19 @@ function mainController($scope, $http) {
         $.get("/searchLocation", {name:searchlocation})
             .done(function(data, status){
                 if (typeof(data) === "object"){
-                    console.log("Making map from name")
+                    $scope.showingLocation = true;
                     $scope.createMapLocation(data);
+                    $scope.setBook(data.bookshelf);
+                    $scope.$apply()
                 }
                 else if ($scope.processCoordinates(searchlocation) != null){
-                    console.log("Making map by coordinates.")
+                    $scope.showingLocation = false;
                     $scope.createMap(searchlocation);
+                    $scope.$apply()
                 }
                 else{
                     $('#map').replaceWith('<div id="map">You done f**d up.</div>')
+                    $scope.showingLocation = false;
                 }
             })
             .error(function(err, status){
@@ -48,15 +54,20 @@ function mainController($scope, $http) {
         }
     }
 
+    $scope.showForm = function(){
+        return !$scope.showingLocation
+    }
+
+    $scope.showBook = function(){
+        return $scope.showingLocation
+    }
+
     $scope.createMap = function(coordinates){
         //takes in coordinates and changes the map location to that
         $('#map').replaceWith('<div id="map" style="width:500px; height:300px;"></div>')
-//        console.log('passed')
         coords = $scope.processCoordinates(coordinates)
         lati = coords[0];
-        lon = coords[1];
-//        console.log(lati)
-        // create an object for options
+        lon = coords[1];        // create an object for options
         var options = {
         elt: document.getElementById('map'),       // ID of map element on page
         zoom: 10,                                  // initial zoom level of the map
@@ -75,7 +86,6 @@ function mainController($scope, $http) {
     }
 
     $scope.createLocation = function() {
-//        console.log($scope.address);
         booklocation = {name: $scope.name, address: $scope.address, coordinates: $scope.coordinates, bookshelf: $scope.bookshelf, description: $scope.description};
         $http.post("/addLocation", booklocation)
             .success(function(data) {             
@@ -94,9 +104,7 @@ function mainController($scope, $http) {
     };
 
     $scope.createMapLocation = function(pinlocation){
-        console.log("Addint map location")
         $('#map').replaceWith('<div id="map" style="width:500px; height:300px;"></div>')
-        console.log('passed')
         coords = $scope.processCoordinates(pinlocation.coordinates)
         lati = coords[0];
         lon = coords[1];
@@ -128,20 +136,18 @@ function mainController($scope, $http) {
         window.map = mapthing;
     }
 
-    // $scope.setBook = function(book){
-    //     console.log(book)
-    //     url = "https://www.goodreads.com/search/index.xml"
-    //     data = "?key=IiXhpeA7SZ5r0z4ndE2BEg" + encodeURIComponent('&') + "q=Redshirts";
-    //     console.log((url + data))
-    //     $.get(url+data)
-    //         .done(function(data, status){
-    //             console.log(data)
-    //             console.log(data.results[0])
-    //         })
-    //         .error(function(err, status){
-    //             console.log(status)
-    //             console.log(err)
-    //         })
-    // }
+    $scope.setBook = function(book){
+        $.get("/searchBook", {searchText:book})
+            .done(function(data, status){
+                $scope.readingBook = data.name;
+                $scope.author = data.author;
+                $scope.img_url = data.image;
+                $scope.$apply()
+            })
+            .error(function(err, status){
+                console.log(status)
+                console.log(err)
+            })
+    }
 
 }
