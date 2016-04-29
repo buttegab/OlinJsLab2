@@ -3,11 +3,11 @@ var app = angular.module("bookQuestApp", ['ngRoute']);
 
 function mainController($scope, $http) {
     $scope.formData = {};
-    $scope.currentSkwiki = null;
+    $scope.currentSkwiki = null; // not relevant to this app!
     console.log("Setting show Location to false")
     $scope.showingLocation = false;
 
-    // when landing on the page, get all skwiki titles and show them
+    // when landing on the page, get all book titles and show them (books? update comments from old code)
     $http.get("/")
         .success(function(data) {
             $scope.books = data;
@@ -31,6 +31,9 @@ function mainController($scope, $http) {
                     $scope.$apply()
                 }
                 else{
+                    // Is there a way to do this without templating html into your page?
+                    // Maybe put this div in your HTML, give it an ng-show, and set the variable
+                    // controlling the show to false at the top of the file -- then, to true in this case?
                     $('#map').replaceWith('<div id="map">You done f**d up.</div>')
                     $scope.showingLocation = false;
                 }
@@ -43,6 +46,9 @@ function mainController($scope, $http) {
 
     $scope.processCoordinates = function(coordinates){
         console.log("coordinates")
+        // Could use hint text on your page which helps the user figure
+        // out what form to enter coordinates in -- I tried "40, 40" (pretty reasonable)
+        // and encountered an error because you weren't expecting a comma
         var res = coordinates.split(" ");
         var lati = parseFloat(res[0])
         var lon = parseFloat(res[1])
@@ -64,10 +70,13 @@ function mainController($scope, $http) {
 
     $scope.createMap = function(coordinates){
         //takes in coordinates and changes the map location to that
+        // same here -- better not to be templating HTML from your controller. Use something like ng-show
         $('#map').replaceWith('<div id="map" style="width:500px; height:300px;"></div>')
-        coords = $scope.processCoordinates(coordinates)
-        lati = coords[0];
-        lon = coords[1];        // create an object for options
+        // Using "var" is even more important clientside than it is serverside --
+        // the global scope is not just the file, but the entire clientside javascript environment
+        var coords = $scope.processCoordinates(coordinates)
+        var lati = coords[0];
+        var lon = coords[1];        // create an object for options
         var options = {
         elt: document.getElementById('map'),       // ID of map element on page
         zoom: 10,                                  // initial zoom level of the map
@@ -76,9 +85,9 @@ function mainController($scope, $http) {
         bestFitMargin: 0,                          // margin offset from map viewport when applying a bestfit on shapes
         zoomOnDoubleClick: true                    // enable map to be zoomed in when double-clicking
         };
-     
+
         // construct an instance of MQA.TileMap with the options object
-        mapthing = new MQA.TileMap(options);
+        var mapthing = new MQA.TileMap(options);
         MQA.withModule('largezoom', function() {
             mapthing.addControl(new MQA.LargeZoom());
         });
@@ -88,7 +97,7 @@ function mainController($scope, $http) {
     $scope.createLocation = function() {
         booklocation = {name: $scope.name, address: $scope.address, coordinates: $scope.coordinates, bookshelf: $scope.bookshelf, description: $scope.description};
         $http.post("/addLocation", booklocation)
-            .success(function(data) {             
+            .success(function(data) {
                 $scope.createMapLocation(booklocation);
                 $scope.name = null; // clear the form
                 $scope.address = null;
@@ -96,7 +105,7 @@ function mainController($scope, $http) {
                 $scope.bookshelf = null;
                 $scope.description = null;
 
-                $scope.skwikis = data;
+                $scope.skwikis = data; // old variable?
             })
             .error(function(data) {
                 console.log('Error: ' + data);
@@ -104,6 +113,10 @@ function mainController($scope, $http) {
     };
 
     $scope.createMapLocation = function(pinlocation){
+        // same issues with var & with templating HTML from your controller in this function --
+        // not going to go through and fix them again
+
+        // Also, a lot of this function overlaps with createMap -- could you create any useful abstractions?
         $('#map').replaceWith('<div id="map" style="width:500px; height:300px;"></div>')
         coords = $scope.processCoordinates(pinlocation.coordinates)
         lati = coords[0];
@@ -117,7 +130,7 @@ function mainController($scope, $http) {
             bestFitMargin: 0,                          // margin offset from map viewport when applying a bestfit on shapes
             zoomOnDoubleClick: true                    // enable map to be zoomed in when double-clicking
         };
-         
+
         // construct an instance of MQA.TileMap with the options object
         mapthing = new MQA.TileMap(options);
         MQA.withModule('largezoom', function() {

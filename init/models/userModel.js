@@ -3,6 +3,7 @@
  * address: Address of the location
  * bookshelf: books suggested for the location
  * description: Description of the location
+ * I think this is the comment for the location model :)
  */
 
 var mongoose = require('mongoose');

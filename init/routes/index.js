@@ -7,7 +7,7 @@ parseString = require('xml2js').parseString,
 request = require('request');
 
 
-routes = {}
+var routes = {}; // technically not necessary because you're globally scoped already, but for consistency...
 routes.home = function(req, res){
   res.sendfile('/public/index.html', {root:'./'})
 };
@@ -21,7 +21,10 @@ routes.login = function(req, res){
 ///////////////////////////////////////////
 ////////// Location API routes ////////////
 routes.location = function(req, res){
-  id = req.query.id;
+  // declare variables w/ var; otherwise they'll be scoped to the file instead of this function
+  // (which can get messy/cause bugs when different functions use the same variable names)
+  // True throughout -- I'll catch the ones I see
+  var id = req.query.id;
   Location.findOne({_id:id}, function(err, location){
   	if (err){
   	  res.status(500).send("Error retrieving location by ID")
@@ -33,9 +36,9 @@ routes.location = function(req, res){
 }
 
 routes.searchBook = function(req, res){
-  text = req.query.searchText;
+  var text = req.query.searchText;
   console.log(text)
-  key = auth.goodreads.APP_ID
+  var key = auth.goodreads.APP_ID
   var url = "https://www.goodreads.com/search/index.xml?key="+key+"&q=\""+text+"\""
   request(url, function(err, response, body){
     if (!err && response.statusCode == 200) {
@@ -44,11 +47,12 @@ routes.searchBook = function(req, res){
           res.status(500).send("Couldn't retrieve book from Goodreads.")
         }
         else{
-          book = result.GoodreadsResponse.search[0].results[0].work[0].best_book[0]
+          // What if there are no responses?
+          var book = result.GoodreadsResponse.search[0].results[0].work[0].best_book[0]
           console.log(book)
-          name = book.title[0]
-          author = book.author[0].name[0]
-          image = book.image_url[0]
+          var name = book.title[0]
+          var author = book.author[0].name[0]
+          var image = book.image_url[0]
           res.send({name:name, author:author, image:image})
         }
       })
@@ -63,7 +67,7 @@ routes.searchBook = function(req, res){
 
 routes.locationbyname = function(req, res){
   console.log("Getting location by name")
-  name = req.query.name;
+  var name = req.query.name;
   Location.findOne({name:name}, function(err, location){
     if (err){
       res.status(500).send("Error retrieving location by name")
@@ -84,7 +88,7 @@ routes.addLocation = function(req, res){
   	//coordinates
   	req.body.coordinates = null; //TODO: Impliment coordinates by address
   }
-  
+
   	location = new Location(req.body)
   	location.save(function(err){
   	  if(err){
@@ -94,7 +98,7 @@ routes.addLocation = function(req, res){
   	  	res.send()
   	  }
   	})
-  
+
 }
 
 routes.editLocation = function(req, res){
