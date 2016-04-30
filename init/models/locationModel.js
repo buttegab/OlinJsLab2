@@ -11,8 +11,8 @@ var mongoose = require('mongoose');
 var locationSchema = mongoose.Schema({
     name: String,
     address: String, //Geocoding API accepts "5-box input", a json object
-    coordinates: String, //Two different floats
-    bookshelf: String, //Array of books to list
+    coordinates: String, //Two different floats -- wait, it's two floats but it's typed as a string?
+    bookshelf: String, //Array of books to list -- wait, it's an array but it's typed as a string?
     description: String
 });
 

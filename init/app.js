@@ -21,7 +21,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-app.use(session({ 
+app.use(session({
   secret: 'Yo. A secret.',
   cookie:{},
   resave: false,
@@ -38,13 +38,13 @@ app.get('/login', index.login)
 app.get('/searchBook', index.searchBook)
 
 //Posts
-// app.post('/addLocation', index.addLocation);
-// app.post('/editLocation', index.editLocation)
-// app.post('/deleteLocation', index.deleteLocation);
+app.post('/addLocation', index.addLocation);
+app.post('/editLocation', index.editLocation)
+app.post('/deleteLocation', index.deleteLocation);
 
-app.post('/addLocation', function(req,res){ensureAuthenticated(req,res,index.addLocation)});
-app.post('/editLocation', function(req,res){ensureAuthenticated(req,res,index.editLocation)});
-app.post('/deleteLocation', function(req,res){ensureAuthenticated(req,res,index.deleteLocation)});
+// app.post('/addLocation', function(req,res){ensureAuthenticated(req,res,index.addLocation)});
+// app.post('/editLocation', function(req,res){ensureAuthenticated(req,res,index.editLocation)});
+// app.post('/deleteLocation', function(req,res){ensureAuthenticated(req,res,index.deleteLocation)});
 
 //Goodreads login code
 app.get('/auth/goodreads', passport.authenticate('goodreads'), function(req,res){console.log("Login in.")});
@@ -67,18 +67,18 @@ passport.use(new GoodreadsStrategy({
   callbackURL: auth.goodreads.CALLBACK_URL,
   },
   function(accessToken, refreshToken, profile, done) {
-    console.log("Reaching authentication function.")
+    // clean up your debugging mechanisms
     User.findOne({ goodreadsId: profile.id }, function (err, user) {
       if (user){
         return done(err, user);
       }
-      else{
+      else {
         user = new User({goodreadsId:profile.id})
         user.save(function(err){
           if(err) {
             console.log(err);  // handle errors!
             return done(err)
-          } 
+          }
           else {
             console.log("saving user ...");
             done(null, user);
