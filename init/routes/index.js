@@ -45,6 +45,7 @@ routes.searchBook = function(req, res){
         }
         else{
           book = result.GoodreadsResponse.search[0].results[0].work[0].best_book[0]
+          //should probably remove debugging statements
           console.log(book)
           name = book.title[0]
           author = book.author[0].name[0]
@@ -80,11 +81,12 @@ routes.addLocation = function(req, res){
   	res.status(400).send("No location provided");
   }
   if (req.body.address && req.body.coordinates){
+      //huh?
   	//We aren't supposed to have them cataloged by address or
   	//coordinates
   	req.body.coordinates = null; //TODO: Impliment coordinates by address
   }
-  
+
   	location = new Location(req.body)
   	location.save(function(err){
   	  if(err){
@@ -94,7 +96,7 @@ routes.addLocation = function(req, res){
   	  	res.send()
   	  }
   	})
-  
+
 }
 
 routes.editLocation = function(req, res){
