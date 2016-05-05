@@ -7,6 +7,7 @@ function mainController($scope, $http) {
     console.log("Setting show Location to false")
     $scope.showingLocation = false;
 
+    // probably not true
     // when landing on the page, get all skwiki titles and show them
     $http.get("/")
         .success(function(data) {
@@ -31,6 +32,7 @@ function mainController($scope, $http) {
                     $scope.$apply()
                 }
                 else{
+                    //probably not the best error message
                     $('#map').replaceWith('<div id="map">You done f**d up.</div>')
                     $scope.showingLocation = false;
                 }
@@ -76,7 +78,7 @@ function mainController($scope, $http) {
         bestFitMargin: 0,                          // margin offset from map viewport when applying a bestfit on shapes
         zoomOnDoubleClick: true                    // enable map to be zoomed in when double-clicking
         };
-     
+
         // construct an instance of MQA.TileMap with the options object
         mapthing = new MQA.TileMap(options);
         MQA.withModule('largezoom', function() {
@@ -88,7 +90,7 @@ function mainController($scope, $http) {
     $scope.createLocation = function() {
         booklocation = {name: $scope.name, address: $scope.address, coordinates: $scope.coordinates, bookshelf: $scope.bookshelf, description: $scope.description};
         $http.post("/addLocation", booklocation)
-            .success(function(data) {             
+            .success(function(data) {
                 $scope.createMapLocation(booklocation);
                 $scope.name = null; // clear the form
                 $scope.address = null;
@@ -96,6 +98,7 @@ function mainController($scope, $http) {
                 $scope.bookshelf = null;
                 $scope.description = null;
 
+                //what are skwikis doing here?
                 $scope.skwikis = data;
             })
             .error(function(data) {
@@ -117,7 +120,7 @@ function mainController($scope, $http) {
             bestFitMargin: 0,                          // margin offset from map viewport when applying a bestfit on shapes
             zoomOnDoubleClick: true                    // enable map to be zoomed in when double-clicking
         };
-         
+
         // construct an instance of MQA.TileMap with the options object
         mapthing = new MQA.TileMap(options);
         MQA.withModule('largezoom', function() {
